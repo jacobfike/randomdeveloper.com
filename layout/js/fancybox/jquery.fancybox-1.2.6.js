@@ -129,12 +129,12 @@
 
 			if (href.match("iframe") || elem.className.indexOf("iframe") >= 0) {
 				$.fn.fancybox.showLoading();
-				_set_content('<iframe id="fancy_frame" onload="jQuery.fn.fancybox.showIframe()" name="fancy_iframe' + Math.round(Math.random()*1000) + '" frameborder="0" hspace="0" src="' + href + '"></iframe>', opts.frameWidth, opts.frameHeight);
+				_setcontent('<iframe id="fancy_frame" onload="jQuery.fn.fancybox.showIframe()" name="fancy_iframe' + Math.round(Math.random()*1000) + '" frameborder="0" hspace="0" src="' + href + '"></iframe>', opts.frameWidth, opts.frameHeight);
 
 			} else if (href.match(/#/)) {
 				var target = window.location.href.split('#')[0]; target = href.replace(target, ''); target = target.substr(target.indexOf('#'));
 
-				_set_content('<div id="fancy_div">' + $(target).html() + '</div>', opts.frameWidth, opts.frameHeight);
+				_setcontent('<div id="fancy_div">' + $(target).html() + '</div>', opts.frameWidth, opts.frameHeight);
 
 			} else if (href.match(imageRegExp)) {
 				imagePreloader = new Image; imagePreloader.src = href;
@@ -154,7 +154,7 @@
 				$.fn.fancybox.showLoading();
 				$.get(href, function(data) {
 					$("#fancy_loading").hide();
-					_set_content( '<div id="fancy_ajax">' + data + '</div>', opts.frameWidth, opts.frameHeight );
+					_setcontent( '<div id="fancy_ajax">' + data + '</div>', opts.frameWidth, opts.frameHeight );
 				});
 			}
 		};
@@ -175,7 +175,7 @@
 				height	= Math.round(ratio * height);
 			}
 
-			_set_content('<img alt="" id="fancy_img" src="' + imagePreloader.src + '" />', width, height);
+			_setcontent('<img alt="" id="fancy_img" src="' + imagePreloader.src + '" />', width, height);
 		};
 
 		function _preload_neighbor_images() {
@@ -198,21 +198,21 @@
 			}
 		};
 
-		function _set_content(value, width, height) {
+		function _setcontent(value, width, height) {
 			busy = true;
 
 			var pad = opts.padding;
 
 			if (oldIE || ieQuirks) {
-				$("#fancy_content")[0].style.removeExpression("height");
-				$("#fancy_content")[0].style.removeExpression("width");
+				$("#fancycontent")[0].style.removeExpression("height");
+				$("#fancycontent")[0].style.removeExpression("width");
 			}
 
 			if (pad > 0) {
 				width	+= pad * 2;
 				height	+= pad * 2;
 
-				$("#fancy_content").css({
+				$("#fancycontent").css({
 					'top'		: pad + 'px',
 					'right'		: pad + 'px',
 					'bottom'	: pad + 'px',
@@ -222,11 +222,11 @@
 				});
 
 				if (oldIE || ieQuirks) {
-					$("#fancy_content")[0].style.setExpression('height',	'(this.parentNode.clientHeight - '	+ pad * 2 + ')');
-					$("#fancy_content")[0].style.setExpression('width',		'(this.parentNode.clientWidth - '	+ pad * 2 + ')');
+					$("#fancycontent")[0].style.setExpression('height',	'(this.parentNode.clientHeight - '	+ pad * 2 + ')');
+					$("#fancycontent")[0].style.setExpression('width',		'(this.parentNode.clientWidth - '	+ pad * 2 + ')');
 				}
 			} else {
-				$("#fancy_content").css({
+				$("#fancycontent").css({
 					'top'		: 0,
 					'right'		: 0,
 					'bottom'	: 0,
@@ -237,8 +237,8 @@
 			}
 
 			if ($("#fancy_outer").is(":visible") && width == $("#fancy_outer").width() && height == $("#fancy_outer").height()) {
-				$("#fancy_content").fadeOut('fast', function() {
-					$("#fancy_content").empty().append($(value)).fadeIn("normal", function() {
+				$("#fancycontent").fadeOut('fast', function() {
+					$("#fancycontent").empty().append($(value)).fadeIn("normal", function() {
 						_finish();
 					});
 				});
@@ -259,10 +259,10 @@
 			};
 
 			if ($("#fancy_outer").is(":visible")) {
-				$("#fancy_content").fadeOut("normal", function() {
-					$("#fancy_content").empty();
+				$("#fancycontent").fadeOut("normal", function() {
+					$("#fancycontent").empty();
 					$("#fancy_outer").animate(itemOpts, opts.zoomSpeedChange, opts.easingChange, function() {
-						$("#fancy_content").append($(value)).fadeIn("normal", function() {
+						$("#fancycontent").append($(value)).fadeIn("normal", function() {
 							_finish();
 						});
 					});
@@ -271,7 +271,7 @@
 			} else {
 
 				if (opts.zoomSpeedIn > 0 && opts.itemArray[opts.itemCurrent].orig !== undefined) {
-					$("#fancy_content").empty().append($(value));
+					$("#fancycontent").empty().append($(value));
 
 					var orig_item	= opts.itemArray[opts.itemCurrent].orig;
 					var orig_pos	= $.fn.fancybox.getPosition(orig_item);
@@ -293,7 +293,7 @@
 
 				} else {
 
-					$("#fancy_content").hide().empty().append($(value)).show();
+					$("#fancycontent").hide().empty().append($(value)).show();
 					$("#fancy_outer").css(itemOpts).fadeIn("normal", function() {
 						_finish();
 					});
@@ -331,7 +331,7 @@
 
 		function _finish() {
 			if ($.browser.msie) {
-				$("#fancy_content")[0].style.removeAttribute('filter');
+				$("#fancycontent")[0].style.removeAttribute('filter');
 				$("#fancy_outer")[0].style.removeAttribute('filter');
 			}
 
@@ -357,7 +357,7 @@
 			});
 
 			if (opts.hideOnContentClick) {
-				$("#fancy_content").click($.fn.fancybox.close);
+				$("#fancycontent").click($.fn.fancybox.close);
 			}
 
 			if (opts.overlayShow && opts.hideOnOverlayClick) {
@@ -380,7 +380,7 @@
 			}
 
 			if (opts.overlayShow && IE6) {
-				$('embed, object, select', $('#fancy_content')).css('visibility', 'visible');
+				$('embed, object, select', $('#fancycontent')).css('visibility', 'visible');
 			}
 
 			if ($.isFunction(opts.callbackOnShow)) {
@@ -389,7 +389,7 @@
 
 			if ($.browser.msie) {
 				$("#fancy_outer")[0].style.removeAttribute('filter'); 
-				$("#fancy_content")[0].style.removeAttribute('filter'); 
+				$("#fancycontent")[0].style.removeAttribute('filter'); 
 			}
 			
 			busy = false;
@@ -484,7 +484,7 @@
 		$(document).unbind("keydown.fb");
 		$(window).unbind("resize.fb scroll.fb");
 
-		$("#fancy_overlay, #fancy_content, #fancy_close").unbind();
+		$("#fancy_overlay, #fancycontent, #fancy_close").unbind();
 
 		$("#fancy_close, #fancy_loading, #fancy_left, #fancy_right, #fancy_title").hide();
 
@@ -493,7 +493,7 @@
 				$("#fancy_overlay").fadeOut("fast");
 			}
 
-			$("#fancy_content").empty();
+			$("#fancycontent").empty();
 			
 			if (opts.centerOnScroll) {
 				$(window).unbind("resize.fb scroll.fb");
@@ -554,7 +554,7 @@
 
 		html += '<a href="javascript:;" id="fancy_left"><span class="fancy_ico" id="fancy_left_ico"></span></a><a href="javascript:;" id="fancy_right"><span class="fancy_ico" id="fancy_right_ico"></span></a>';
 
-		html += '<div id="fancy_content"></div>';
+		html += '<div id="fancycontent"></div>';
 
 		html += '</div>';
 		html += '</div>';
